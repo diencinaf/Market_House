@@ -1,0 +1,52 @@
+#map {
+    display: flex;
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    height: 400px;
+    width: 70%;
+    margin: 20px auto 0; /* Márgenes 20px arriba, automáticos a los lados y ninguno abajo */
+}
+
+
+
+/* Estilo personalizado para la página de inicio */
+body {
+    background-image: url("logo.jpg"); /* URL de la imagen de fondo */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.container {
+    padding-top: 50px;
+    text-align: center;
+    color: #ffffff; /* Color del texto para mejor legibilidad */
+}
+h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+.user-info {
+    font-size: 24px;
+    margin-top: 20px;
+}
+.login-link {
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Estilo para el fondo de la barra de navegación */
+.navbar {
+    background-color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Estilo para los elementos de la barra de navegación */
+.navbar a {
+    color: #777;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+}
+

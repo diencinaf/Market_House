@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+	<title>Booking Form HTML Template</title>
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
+
+	<!-- Bootstrap -->
+	<link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+
+
+
+	<!-- Custom stlylesheet -->
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+	<script>
+        function initMap() {
+            var input = document.getElementById('addressInput');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.addListener('place_changed', function() {
+                var place = autocomplete.getPlace();
+                if (place.geometry && place.geometry.location) {
+                    var latitud = place.geometry.location.lat();
+                    var longitud = place.geometry.location.lng();
+                    // Ahora puedes usar las variables "latitude" y "longitude" como desees
+                    document.getElementById('latitud').value = latitud;
+                    document.getElementById('longitud').value = longitud;
+                }
+            });
+        }
+		</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4E7dHImO6wXgKFamKRy80er9KRh2Oztw&libraries=places&callback=initMap" async defer></script>
+
+		
+
+
+</head>
+
+<body>
+	<div id="booking" class="section">
+		<div class="section-center">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-5">
+						<div class="booking-cta">
+							<h1>Vende con nosotros</h1>
+							<p>comprometidos con tu seguridad</p>
+						</div>
+					</div>
+					<div class="col-md-6 col-md-offset-1">
+						<div class="booking-form">
+							<form action="/vender" method="post"> 
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<input class="form-control" id="addressInput" placeholder="" type="text" name="calle">
+											<input type="hidden" id="latitud" name="latitud">
+											<input type="hidden" id="longitud" name="longitud">
+											<span class="form-label">Calle</span>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<input class="form-control" type="text" name="comuna">
+											<span class="form-label">Comuna</span>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<input class="form-control" type="text" name="numero">
+											<span class="form-label">Número</span>
+										</div>
+									</div>
+									<div class="col-md-3 col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Habitaciones</span>
+											<select class="form-control" name="habitaciones" >
+												<option></option>
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>Más</option>
+											</select>
+											
+										</div>
+									</div>
+									<div class="col-md-4 col-sm-6">
+										<div class="form-group">
+											<span class="form-label">Baños</span>
+											<select class="form-control" name="banos">
+												<option></option>
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>Más</option>
+											</select>
+										
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<input class="form-control" type="text" number name="terrenoConstruido">
+											<span class="form-label">Terreno construido</span>
+										</div>
+										<div class="form-group">
+											<input class="form-control" type="text" number name="terrenoTotal">
+											<span class="form-label">Terreno total</span>
+										</div>
+										<div class="form-group">
+											<input class="form-control" type="text" required name="valorPropiedad">
+											<span class="form-label">Valor de la propiedad</span>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<input class="form-control" type="text" required name="material">
+											<span class="form-label">Material</span>
+										</div>
+										<div class="form-group">
+											<span class="form-label">Estacionamientos</span> 
+											<select class="form-control" name="estacionamientos">
+												<option></option>
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>Más</option>
+											</select>
+										
+
+										</div>
+									</div>
+								</div>
+								<div class="form-btn">
+									<button id="venderBtn" class="submit-btn">Publicar</button>
+								</div>								
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script>
+		$('.form-control').each(function () {
+			floatedLabel($(this));
+		});
+
+		$('.form-control').on('input', function () {
+			floatedLabel($(this));
+		});
+
+		function floatedLabel(input) {
+			var $field = input.closest('.form-group');
+			if (input.val()) {
+				$field.addClass('input-not-empty');
+			} else {
+				$field.removeClass('input-not-empty');
+			}
+		}
+	</script>
+
+</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+
+</html>
