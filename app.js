@@ -22,6 +22,13 @@ app.use('/resources', express.static('public'));
 
 // Ruta inicio (index)
 
+const routes = ['register'];
+routes.forEach(route => {
+    app.get(`/${route}`, (req, res) => {
+        res.render(route);
+    });
+});
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index/index.html');
 });
@@ -37,6 +44,16 @@ app.get('/login', (req, res) => {
 app.get('/vender', (req, res) => {
     res.sendFile(__dirname + '/public/vender/vender.html');
 });
+
+// Ruta registro
+
+app.get('/registro', (req, res) => {
+    res.sendFile(__dirname + '/public/registro/registro.html');
+});
+
+
+
+
 
 
 
