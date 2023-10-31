@@ -18,17 +18,18 @@ app.use(express.static(__dirname + '/public'));
 app.use('/resources', express.static('public'));
 
 // Enrutamiento dinámico para vistas
-const routes = ['login', 'register', 'index'];
-routes.forEach(route => {
-    app.get(`/${route}`, (req, res) => {
-        res.render(route);
-    });
-});
+
 
 // Ruta inicio (index)
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index/index.html');
+});
+
+// Ruta login
+
+app.get('/login', (req, res) => {
+    res.sendFile(__dirname + '/public/login/login.html');
 });
 
 // Ruta vender
@@ -127,6 +128,8 @@ app.post('/register', async (req, res) => {
   
 
 // Login /
+
+
 
 connection.query('USE login_node', (error) => {
     if (error) {
