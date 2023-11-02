@@ -2,8 +2,6 @@ name: Limpiar la cache de GitHub Actions
 run: |
   npm cache clean --force
 
-name: Despliegue de app web CI/CD Market House
-
 on:
   push:
     branches:
@@ -20,16 +18,16 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '16' # Cambia a la versión de Node.js que necesites
+          node-version: '18' # Cambia a la versión de Node.js que necesites
 
       - name: Instalar dependencias
         run: npm install # Cambia esto si utilizas otro sistema de gestión de paquetes
 
       - name: Construir el sitio web
-        run: npm run build # Cambia esto para ejecutar tu comando de construcción
+        run:  node app # Cambia esto para ejecutar tu comando de construcción
 
       - name: Desplegar en GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./PRUEBA_MAPA # Cambia a la carpeta de tu sitio web generado
+          publish_dir: ./app.js # Cambia a la carpeta de tu sitio web generado
