@@ -51,6 +51,14 @@ app.get('/registro', (req, res) => {
     res.sendFile(__dirname + '/public/registro/registro.html');
 });
 
+// Ruta Mis publicaciones
+
+app.get('/mis_publicaciones', (req, res) => {
+    res.sendFile(__dirname + '/public/mis_publicaciones/mis_publicaciones.html');
+});
+
+
+
 
 
 
@@ -262,6 +270,8 @@ app.post('/vender', async (req, res) => {
   const estacionamientos = req.body.estacionamientos;
   const latitud = req.body.latitud;
   const longitud = req.body.longitud;
+  const usuario_id = req.body.usuario_id;
+
 
 
   // Seleccionar la base de datos adecuada
@@ -284,7 +294,8 @@ app.post('/vender', async (req, res) => {
               material: material,
               estacionamientos: estacionamientos,
               latitud: req.body.latitud,
-              longitud: req.body.longitud
+              longitud: req.body.longitud,
+              usuario_id: req.session.user
           };
 
           connection.query(sql, userData, (error, results) => {
@@ -330,3 +341,11 @@ app.get('/get-comunas', (req, res) => {
 app.listen(3000, (req, res)=>{
     console.log('SERVER RUNNING IN http://localhost:3000');
 })
+
+
+
+
+
+
+
+

@@ -19,23 +19,6 @@
 	<!-- Custom stlylesheet -->
 	<link rel="stylesheet" type="text/css" href="style.css">
 
-	<script>
-        function initMap() {
-            var input = document.getElementById('addressInput');
-            var autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.addListener('place_changed', function() {
-                var place = autocomplete.getPlace();
-                if (place.geometry && place.geometry.location) {
-                    var latitud = place.geometry.location.lat();
-                    var longitud = place.geometry.location.lng();
-                    // Ahora puedes usar las variables "latitude" y "longitude" como desees
-                    document.getElementById('latitud').value = latitud;
-                    document.getElementById('longitud').value = longitud;
-                }
-            });
-        }
-		</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4E7dHImO6wXgKFamKRy80er9KRh2Oztw&libraries=places&callback=initMap" async defer></script>
 
 		
 
@@ -55,14 +38,13 @@
 					</div>
 					<div class="col-md-6 col-md-offset-1">
 						<div class="booking-form">
-							<form action="/vender" method="post"> 
+							<form action="/eliminar" method="post"> 
 								<div class="row">
 									<div class="col-md-6">
-										<div class="form-group"> 
-											<input class="form-control" id="addressInput" placeholder="" type="text" name="calle">
-											<input type="hidden" id="latitud" name="latitud">
-											<input type="hidden" id="longitud" name="longitud">
-											<span class="form-label">Calle</span>
+										<div class="form-group">
+											<label for="publicacionId">ID de la Publicación a Eliminar:</label>
+											<input type="text" id="publicacionId" name="publicacionId" required>
+											<button type="submit">Eliminar</button>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -174,11 +156,7 @@
 				$field.removeClass('input-not-empty');
 			}
 		}
-
 	</script>
-
-
-	
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 
