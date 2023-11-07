@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/index/index.html');
 });
 
+
 // Ruta login
 
 app.get('/login', (req, res) => {
@@ -91,8 +92,7 @@ require('./database/db');
 
 
 
-//10 registro
-
+// 10 registro
 app.post('/register', async (req, res) => {
     const nombres = req.body.nombres;
     const apellidos = req.body.apellidos;
@@ -102,54 +102,56 @@ app.post('/register', async (req, res) => {
     const pass = req.body.pass;
     const celular = req.body.celular;
     const fechaNacimiento = req.body.fechaNacimiento;
-  
+
     // Seleccionar la base de datos adecuada
     connection.query('USE login_node', (error) => {
-      if (error) {
-        console.error('Error al seleccionar la base de datos:', error);
-        res.status(500).send('Error interno del servidor');
-      } else {
-        // Generar el hash de la contraseña y realizar la inserción
-        bcryptjs.hash(pass, 8, async (error, passwordHash) => {
-          if (error) {
-            console.error('Error al generar el hash de la contraseña:', error);
+        if (error) {
+            console.error('Error al seleccionar la base de datos:', error);
             res.status(500).send('Error interno del servidor');
-          } else {
-            // Realizar la inserción en la base de datos
-            const sql = 'INSERT INTO users SET ?';
-            const userData = {
-                nombres: nombres,
-                apellidos: apellidos,
-                user: user,
-                rut: rut,
-                rutCi: rutCi,
-                pass: passwordHash,
-                celular: celular,
-                fechaNacimiento: fechaNacimiento
-            };
-  
-            connection.query(sql, userData, (error, results) => {
-              if (error) {
-                console.error('Error al insertar en la base de datos:', error);
-                res.status(500).send('Error interno del servidor');
-              } else {
-                res.render('register',{
-                    alert: true,
-                    alertTitle: "Registration",
-                    alertMessage: "registro exitoso",
-                    alertIcon: 'success',
-                    showConfirmButton:false,
-                    timer:1500,
-                    ruta:''
+        } else {
+            // Generar el hash de la contraseña
+            bcryptjs.hash(pass, 8, async (error, passwordHash) => {
+                if (error) {
+                    console.error('Error al generar el hash de la contraseña:', error);
+                    res.status(500).send('Error interno del servidor');
+                } else {
+                    // Realizar la inserción en la base de datos
+                    const sql = 'INSERT INTO users SET ?';
+                    const userData = {
+                        nombres: nombres,
+                        apellidos: apellidos,
+                        user: user,
+                        rut: rut,
+                        rutCi: rutCi,
+                        pass: passwordHash,
+                        celular: celular,
+                        fechaNacimiento: fechaNacimiento,
+                    };
 
-                })
-              }
+                    connection.query(sql, userData, (error, results) => {
+                        if (error) {
+                            console.error('Error al insertar en la base de datos:', error);
+                            res.status(500).send('Error interno del servidor');
+                        } else {
+                            // Crear una sesión para el usuario inmediatamente después de registrarse
+                            req.session.loggedin = true;
+                            req.session.user = user;
+
+                            // Redirigir al usuario a la página deseada
+                            res.redirect('/'); 
+                        }
+                    });
+                }
             });
-          }
-        });
-      }
+        }
     });
-  });
+});
+
+
+
+
+
+
   
 
 // Login /
@@ -335,6 +337,31 @@ app.get('/get-comunas', (req, res) => {
 });
 
 
+
+
+// Visualizar propiedades por usuario en pagina mis publicaciones 
+
+app.get('/mis_publicaciones', (req, res) => {
+    // Verifica si el usuario ha iniciado sesión
+    if (req.session.loggedin) {
+        const usuario_id = req.session.user;
+
+        // Realiza una consulta a la base de datos para obtener las propiedades del usuario
+        connection.query('SELECT * FROM vender WHERE usuario_id = ?', [usuario_id], (error, results) => {
+            if (error) {
+                console.error('Error al obtener las propiedades:', error);
+                res.status(500).json({ error: 'Error interno del servidor' });
+            } else {
+                const propiedades = results;
+                // Renderiza una vista que muestra las propiedades del usuario
+                res.render('mis_publicaciones', { propiedades });
+            }
+        });
+    } else {
+        // Si el usuario no ha iniciado sesión, puedes redirigirlo a una página de inicio de sesión
+        res.redirect('/login');
+    }
+});
 
 
 
