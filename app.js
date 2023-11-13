@@ -2,6 +2,8 @@
 const express = require('express');
 const app = express();
 
+app.set('view engine', 'ejs');
+
 //2 set urlencoded para captura de datos del formulario
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
@@ -12,7 +14,7 @@ const dotenv = require('dotenv');
 dotenv.config({path:'./env/.env'});
 
 //4 set directorio publico 
-//9 estableciendo rutas
+
 
 app.use(express.static(__dirname + '/public'));
 app.use('/resources', express.static('public'));
@@ -39,8 +41,6 @@ app.get('/', (req, res) => {
 });
 
 
-
-
 // Ruta login
 
 app.get('/login', (req, res) => {
@@ -60,14 +60,6 @@ app.get('/vender', (req, res) => {
 app.get('/registro', (req, res) => {
     res.render('registro');
 });
-
-// Ruta Mis publicaciones
-
-app.get('/mis_publicaciones', (req, res) => {
-    res.sendFile(__dirname + '/public/mis_publicaciones/mis_publicaciones.html');
-});
-
-
 
 
 
@@ -253,6 +245,8 @@ app.get('/check-auth', (req, res) => {
 
 
 
+
+
 // Logout
 app.get('/logout', (req, res)=>{
     req.session.destroy(()=>{
@@ -264,8 +258,6 @@ app.get('/logout', (req, res)=>{
 // Registro de una VENTA
 app.post('/vender', async (req, res) => {
   const calle = req.body.calle;
-  const comuna = req.body.comuna;
-  const numero = req.body.numero;
   const habitaciones = req.body.habitaciones;
   const banos = req.body.banos;
   const terrenoConstruido = req.body.terrenoConstruido;
@@ -289,8 +281,6 @@ app.post('/vender', async (req, res) => {
           const sql = 'INSERT INTO vender SET ?';
           const userData = {
               calle: calle,
-              comuna: comuna,
-              numero: numero,
               habitaciones: habitaciones,
               banos: banos,
               terrenoConstruido: terrenoConstruido,
@@ -319,44 +309,46 @@ app.post('/vender', async (req, res) => {
 // Alimenta el map con las comunas que se van agregando
 
 // Obtener comunas desde la base de datos
-app.get('/get-comunas', (req, res) => {
-    connection.query('SELECT comuna, valorPropiedad, latitud, longitud FROM vender', (error, results) => {
+app.get('/get-calle', (req, res) => {
+    connection.query('SELECT calle, valorPropiedad, latitud, longitud FROM vender', (error, results) => {
         if (error) {
-            console.error('Error al obtener las comunas:', error);
+            console.error('Error al obtener las calle:', error);
             res.status(500).json({ error: 'Error interno del servidor' });
         } else {
-            const comunas = results;
-            res.json({ comunas });
+            const calle = results;
+            res.json({ calle });
         }
     });
 });
 
 
-
-
-// Visualizar propiedades por usuario en pagina mis publicaciones 
+//CRUD
 
 app.get('/mis_publicaciones', (req, res) => {
     // Verifica si el usuario ha iniciado sesión
     if (req.session.loggedin) {
         const usuario_id = req.session.user;
 
-        // Realiza una consulta a la base de datos para obtener las propiedades del usuario
-        connection.query('SELECT * FROM vender WHERE usuario_id = ?', [usuario_id], (error, results) => {
+        // Realiza una consulta a la base de datos para obtener la cantidad de propiedades del usuario
+        connection.query('SELECT COUNT(*) as totalPropiedades FROM vender WHERE usuario_id = ?', [usuario_id], (error, results) => {
             if (error) {
-                console.error('Error al obtener las propiedades:', error);
+                console.error('Error al obtener la cantidad de propiedades:', error);
                 res.status(500).json({ error: 'Error interno del servidor' });
             } else {
-                const propiedades = results;
-                // Renderiza una vista que muestra las propiedades del usuario
-                res.render('mis_publicaciones', { propiedades });
+                const totalPropiedades = results[0].totalPropiedades;
+
+
+                // Renderiza la vista 'ver_propiedades' con el valor de totalPropiedades
+                res.render('mis_publicaciones', { totalPropiedades });
             }
         });
     } else {
-        // Si el usuario no ha iniciado sesión, puedes redirigirlo a una página de inicio de sesión
-        res.redirect('/login');
+        // Si el usuario no ha iniciado sesión, redirige al usuario a la página de inicio con un mensaje de error
+        res.redirect('/?alert=true&alertTitle=Error&alertMessage=Debes+iniciar+sesión&alertIcon=error&showConfirmButton=false&timer=3000&ruta=/');
     }
 });
+
+
 
 
 
