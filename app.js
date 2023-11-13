@@ -29,27 +29,36 @@ routes.forEach(route => {
     });
 });
 
+// Ruta inicio (index)
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index/index.html');
+    if (req.session && req.session.loggedin && req.session.user) {
+        res.render('index', { login: req.session.loggedin, user: req.session.user });
+    } else {
+        res.render('index', { login: false, user: null });
+    }
 });
+
+
 
 
 // Ruta login
 
 app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/public/login/login.html');
+    res.render('login');
 });
+
 
 // Ruta vender
 
 app.get('/vender', (req, res) => {
-    res.sendFile(__dirname + '/public/vender/vender.html');
+    res.render('vender');
 });
+
 
 // Ruta registro
 
 app.get('/registro', (req, res) => {
-    res.sendFile(__dirname + '/public/registro/registro.html');
+    res.render('registro');
 });
 
 // Ruta Mis publicaciones
@@ -179,7 +188,7 @@ connection.query('USE login_node', (error) => {
 app.post('/auth', async (req, res) => {
     const user = req.body.user;
     const pass = req.body.pass;
-    let passwordHaash = await bcryptjs.hash(pass, 8);
+
     if (user && pass) {
         connection.query('SELECT * FROM users WHERE user = ?', [user], async (error, results) => {
             if (error) {
@@ -189,15 +198,8 @@ app.post('/auth', async (req, res) => {
                 if (results && results.length > 0 && (await bcryptjs.compare(pass, results[0].pass))) {
                     req.session.loggedin = true;
                     req.session.user = results[0].user;
-                    res.render('login', {
-                        alert: true,
-                        alertTitle: "Conexión exitosa",
-                        alertMessage: "Login correcto",
-                        alertIcon: 'success',
-                        showConfirmButton: false,
-                        timer: false,
-                        ruta: ''
-                    });
+                    // Redirige al usuario después de la autenticación exitosa
+                    res.redirect('/'); // Puedes cambiar '/' con la ruta que desees
                 } else {
                     res.render('login', {
                         alert: true,
@@ -209,7 +211,7 @@ app.post('/auth', async (req, res) => {
                         ruta: 'login'
                     });
                 }
-            } 
+            }
         });
     } else {
         res.render('login', {
@@ -223,6 +225,7 @@ app.post('/auth', async (req, res) => {
         });
     }
 });
+
 
 
 //12 auth pages tambien vemos a que pagina te envia al hacer login
@@ -301,21 +304,13 @@ app.post('/vender', async (req, res) => {
           };
 
           connection.query(sql, userData, (error, results) => {
-              if (error) {
-                  console.error('Error al insertar en la base de datos:', error);
-                  res.status(500).send('Error interno del servidor');
-              } else {
-                  res.render('login', {
-                      alert: true,
-                      alertTitle: "Registration",
-                      alertMessage: "registro exitoso",
-                      alertIcon: 'success',
-                      showConfirmButton: false,
-                      timer: 1500,
-                      ruta: ''
-                  });
-              }
-          });
+            if (error) {
+                console.error('Error al insertar en la base de datos:', error);
+                res.status(500).send('Error interno del servidor');
+            } else {
+                res.redirect('/?alert=true&alertTitle=Registration&alertMessage=registro+exitoso&alertIcon=success&showConfirmButton=false&timer=1500&ruta=/');
+            }
+        });        
       }
   });
 });
