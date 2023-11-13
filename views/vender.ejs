@@ -59,7 +59,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group"> 
-											<input class="form-control" id="addressInput" placeholder="" type="text" name="calle">
+											<input class="form-control" id="addressInput" placeholder="" type="text" name="calle" required>
 											<input type="hidden" id="latitud" name="latitud">
 											<input type="hidden" id="longitud" name="longitud">
 											<span class="form-label">Calle</span>
@@ -67,7 +67,7 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<input class="form-control" type="text" name="comuna">
+											<input class="form-control" type="text" name="comuna" required>
 											<span class="form-label">Comuna</span>
 										</div>
 									</div>
@@ -75,14 +75,14 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<input class="form-control" type="text" name="numero">
+											<input class="form-control" type="text" name="numero" required>
 											<span class="form-label">Número</span>
 										</div>
 									</div>
 									<div class="col-md-3 col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Habitaciones</span>
-											<select class="form-control" name="habitaciones" >
+											<select class="form-control" name="habitaciones" required>
 												<option></option>
 												<option>1</option>
 												<option>2</option>
@@ -97,7 +97,7 @@
 									<div class="col-md-4 col-sm-6">
 										<div class="form-group">
 											<span class="form-label">Baños</span>
-											<select class="form-control" name="banos">
+											<select class="form-control" name="banos" required>
 												<option></option>
 												<option>1</option>
 												<option>2</option>
@@ -112,26 +112,26 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<input class="form-control" type="text" number name="terrenoConstruido">
+											<input class="form-control" type="text" number name="terrenoConstruido" required> 
 											<span class="form-label">Terreno construido</span>
 										</div>
 										<div class="form-group">
-											<input class="form-control" type="text" number name="terrenoTotal">
+											<input class="form-control" type="text" number name="terrenoTotal" required>
 											<span class="form-label">Terreno total</span>
 										</div>
 										<div class="form-group">
-											<input class="form-control" type="text" required name="valorPropiedad">
+											<input class="form-control" type="text" name="valorPropiedad" required >
 											<span class="form-label">Valor de la propiedad</span>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<input class="form-control" type="text" required name="material">
+											<input class="form-control" type="text" name="material" required>
 											<span class="form-label">Material</span>
 										</div>
 										<div class="form-group">
 											<span class="form-label">Estacionamientos</span> 
-											<select class="form-control" name="estacionamientos">
+											<select class="form-control" name="estacionamientos" required>
 												<option></option>
 												<option>1</option>
 												<option>2</option>
