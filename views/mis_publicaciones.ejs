@@ -1,21 +1,127 @@
-<!-- views/ver_propiedades.ejs -->
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Resto del encabezado... -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Booking Form HTML Template</title>
+    <!-- Google font -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,900" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <!-- Custom stlylesheet -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function initMap() {
+            var input = document.getElementById('addressInput');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.addListener('place_changed', function () {
+                var place = autocomplete.getPlace();
+                if (place.geometry && place.geometry.location) {
+                    var latitud = place.geometry.location.lat();
+                    var longitud = place.geometry.location.lng();
+                    document.getElementById('latitud').value = latitud;
+                    document.getElementById('longitud').value = longitud;
+                }
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4E7dHImO6wXgKFamKRy80er9KRh2Oztw&libraries=places&callback=initMap" async defer></script>
 </head>
 
 <body>
-    <h1>Propiedades del Usuario</h1>
+    <div id="booking" class="section">
+        <div class="section-center">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="booking-cta">
+                            <h1>Vende con nosotros</h1>
+                            <p>comprometidos con tu seguridad</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-md-offset-1">
+                        <div class="booking-form">
+                            <h1>Mis Publicaciones</h1>
 
-    <!-- Agrega este log para verificar el valor de totalPropiedades -->
+                            <!-- Aquí se mostrará la información de las propiedades en una sola línea -->
+                            <div id="propiedadesContainer">
+                                <% propiedades.forEach((propiedad, index) => { %>
+                                    <div class="propiedad-info">
+                                        <p>
+                                            <strong>Dirección:</strong> <%= propiedad.calle %> - <br>
+                                            <strong>Valor Propiedad:</strong> <%= propiedad.valorPropiedad %>
+                                            <button class="eliminar-btn" data-index="<%= index %>">Eliminar</button>
+                                        </p>
+                                    </div>
+                                <% }); %>
+                            </div>
 
+                            <% if (totalPropiedades > 0) { %>
+                                <p>El usuario tiene <%= totalPropiedades %> propiedades.</p>
+                            <% } else { %>
+                                <p>El usuario no tiene propiedades registradas.</p>
+                            <% } %>
 
-    <!-- Utiliza la variable totalPropiedades proporcionada por EJS -->
-    <p>El usuario tiene <%= totalPropiedades %> propiedades.</p>
-    <!-- Resto del cuerpo... -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Evento para el botón "Eliminar"
+            $('.eliminar-btn').click(function () {
+                var index = $(this).data('index');
+                
+                // Confirmar si el usuario realmente quiere eliminar la propiedad
+                var confirmacion = confirm('¿Estás seguro de que deseas eliminar esta propiedad?');
+
+                if (confirmacion) {
+                    // Realizar la solicitud para eliminar la propiedad al servidor
+                    $.ajax({
+                        url: '/eliminar_propiedad',
+                        method: 'POST',
+                        data: { index: index },
+                        success: function (response) {
+                            // Recargar la página después de eliminar la propiedad
+                            location.reload();
+                        },
+                        error: function (error) {
+                            console.error('Error al eliminar la propiedad:', error);
+                            // Puedes manejar el error de otra manera si lo prefieres
+                            alert('Error al eliminar la propiedad. Por favor, inténtalo de nuevo.');
+                        }
+                    });
+                }
+            });
+
+            // ... Tu código existente ...
+        });
+    </script>
+
+    <script>
+        $('.form-control').each(function () {
+            floatedLabel($(this));
+        });
+
+        $('.form-control').on('input', function () {
+            floatedLabel($(this));
+        });
+
+        function floatedLabel(input) {
+            var $field = input.closest('.form-group');
+            if (input.val()) {
+                $field.addClass('input-not-empty');
+            } else {
+                $field.removeClass('input-not-empty');
+            }
+        }
+    </script>
 </body>
 
 </html>

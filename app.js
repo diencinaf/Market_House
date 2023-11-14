@@ -329,22 +329,47 @@ app.get('/mis_publicaciones', (req, res) => {
     if (req.session.loggedin) {
         const usuario_id = req.session.user;
 
-        // Realiza una consulta a la base de datos para obtener la cantidad de propiedades del usuario
-        connection.query('SELECT COUNT(*) as totalPropiedades FROM vender WHERE usuario_id = ?', [usuario_id], (error, results) => {
+        // Realiza una consulta a la base de datos para obtener las propiedades del usuario
+        connection.query('SELECT * FROM vender WHERE usuario_id = ?', [usuario_id], (error, results) => {
             if (error) {
-                console.error('Error al obtener la cantidad de propiedades:', error);
+                console.error('Error al obtener propiedades:', error);
                 res.status(500).json({ error: 'Error interno del servidor' });
             } else {
-                const totalPropiedades = results[0].totalPropiedades;
+                const propiedades = results;
 
-
-                // Renderiza la vista 'ver_propiedades' con el valor de totalPropiedades
-                res.render('mis_publicaciones', { totalPropiedades });
+                // Renderiza la vista 'mis_publicaciones' con el valor de totalPropiedades y las propiedades
+                res.render('mis_publicaciones', { totalPropiedades: propiedades.length, propiedades });
             }
         });
     } else {
         // Si el usuario no ha iniciado sesión, redirige al usuario a la página de inicio con un mensaje de error
         res.redirect('/?alert=true&alertTitle=Error&alertMessage=Debes+iniciar+sesión&alertIcon=error&showConfirmButton=false&timer=3000&ruta=/');
+    }
+});
+
+
+
+
+app.post('/eliminar_propiedad', (req, res) => {
+    if (req.session.loggedin) {
+        const usuario_id = req.session.user;
+        const propiedadIndex = req.body.index;
+
+        // Obtener la propiedad específica del índice
+        const propiedadAEliminar = propiedades[propiedadIndex];
+
+        // Realizar la consulta para eliminar la propiedad de la base de datos
+        connection.query('DELETE FROM vender WHERE id = ? AND usuario_id = ?', [propiedadAEliminar.id, usuario_id], (error, results) => {
+            if (error) {
+                console.error('Error al eliminar la propiedad:', error);
+                res.status(500).json({ error: 'Error interno del servidor' });
+            } else {
+                // Devolver una respuesta exitosa
+                res.json({ success: true });
+            }
+        });
+    } else {
+        res.status(401).json({ error: 'No autorizado' });
     }
 });
 
