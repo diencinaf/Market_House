@@ -355,23 +355,37 @@ app.post('/eliminar_propiedad', (req, res) => {
         const usuario_id = req.session.user;
         const propiedadIndex = req.body.index;
 
-        // Obtener la propiedad específica del índice
-        const propiedadAEliminar = propiedades[propiedadIndex];
-
-        // Realizar la consulta para eliminar la propiedad de la base de datos
-        connection.query('DELETE FROM vender WHERE id = ? AND usuario_id = ?', [propiedadAEliminar.id, usuario_id], (error, results) => {
+        // Realizar una consulta para obtener las propiedades del usuario desde la base de datos
+        connection.query('SELECT * FROM vender WHERE usuario_id = ?', [usuario_id], (error, propiedades) => {
             if (error) {
-                console.error('Error al eliminar la propiedad:', error);
+                console.error('Error al obtener las propiedades del usuario:', error);
                 res.status(500).json({ error: 'Error interno del servidor' });
             } else {
-                // Devolver una respuesta exitosa
-                res.json({ success: true });
+                // Verificar si la propiedad existe en el índice proporcionado
+                if (propiedades && propiedadIndex >= 0 && propiedadIndex < propiedades.length) {
+                    // Obtener la propiedad específica del índice
+                    const propiedadAEliminar = propiedades[propiedadIndex];
+
+                    // Realizar la consulta para eliminar la propiedad de la base de datos
+                    connection.query('DELETE FROM vender WHERE id = ? AND usuario_id = ?', [propiedadAEliminar.id, usuario_id], (error, results) => {
+                        if (error) {
+                            console.error('Error al eliminar la propiedad:', error);
+                            res.status(500).json({ error: 'Error interno del servidor' });
+                        } else {
+                            // Devolver una respuesta exitosa
+                            res.json({ success: true });
+                        }
+                    });
+                } else {
+                    res.status(404).json({ error: 'La propiedad no existe' });
+                }
             }
         });
     } else {
         res.status(401).json({ error: 'No autorizado' });
     }
 });
+
 
 
 
